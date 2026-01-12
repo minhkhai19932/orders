@@ -67,7 +67,7 @@ export const useOrdersStore = create<OrdersStore>((set) => ({
   updateOne: async (id: string, payload: UpdateOrderPayload) => {
     set({ loading: true, error: null });
     try {
-      const updatedOrder = await updateOrder(id, payload);
+      const updatedOrder = await updateOrder(payload);
       set((state) => ({
         items: state.items.map((item) =>
           item.id === id ? updatedOrder : item

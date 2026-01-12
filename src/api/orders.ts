@@ -39,10 +39,7 @@ export async function createOrder(payload: CreateOrderPayload): Promise<Order> {
   });
 }
 
-export async function updateOrder(
-  id: string,
-  payload: UpdateOrderPayload
-): Promise<Order> {
+export async function updateOrder(payload: UpdateOrderPayload): Promise<Order> {
   console.log("payload", payload);
   return request<Order>(`/orders/${payload.orderCode}`, {
     method: "PATCH",
