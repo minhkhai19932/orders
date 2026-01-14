@@ -156,6 +156,33 @@ function OrdersPage() {
     );
   }, []);
 
+  const getShippingStatusBadge = useCallback((status: string | undefined | null) => {
+    type ShippingStatusConfig = {
+      variant: "default" | "success" | "warning" | "error" | "info";
+      label: string;
+    };
+
+    const normalized = status?.toUpperCase() ?? "UNKNOWN";
+
+    const statusConfig: Record<string, ShippingStatusConfig> = {
+      PENDING: { variant: "warning", label: "Awaiting Pickup" },
+      IN_TRANSIT: { variant: "info", label: "On the Way" },
+      OUT_FOR_DELIVERY: { variant: "info", label: "Courier Out" },
+      DELIVERED: { variant: "success", label: "Shipment Received" },
+      RETURNED: { variant: "error", label: "Returned to Sender" },
+      CANCELLED: { variant: "error", label: "Shipment Cancelled" },
+      UNKNOWN: { variant: "default", label: "Unknown" },
+    };
+
+    const config = statusConfig[normalized] ?? statusConfig.UNKNOWN;
+
+    return (
+      <Badge variant={config.variant} size="sm">
+        {config.label}
+      </Badge>
+    );
+  }, []);
+
   const getProductName = useCallback(
     (productId: string) => {
       const product = products.find((p) => p.id === productId);
@@ -642,9 +669,9 @@ function OrdersPage() {
                         <div className="text-sm font-medium text-gray-700">
                           Shipping Status
                         </div>
-                        <p className="mt-1 text-sm text-gray-900">
-                          {currentOrder.shipping.status}
-                        </p>
+                        <div className="mt-1">
+                          {getShippingStatusBadge(currentOrder.shipping.status)}
+                        </div>
                       </div>
                     )}
                     {currentOrder.shipping.shipper?.name && (
